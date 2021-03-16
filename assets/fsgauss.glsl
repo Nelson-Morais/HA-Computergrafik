@@ -9,7 +9,8 @@ uniform float Weights[5];
 
 /*
 Quellen
-    https://entwickler.de/online/opengl-weltraumeffekte-mit-motion-blur-lens-flare-co-how-to-114796.html
+https://learnopengl.com/Advanced-Lighting/Bloom
+
 */
 void main()
 {

@@ -112,7 +112,7 @@ void main()
 	else
         BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
 		
-		
+	//godrays	
 	vec4 depthTmp = depth;
 		depthTmp.z =  depth.z * 2;
 

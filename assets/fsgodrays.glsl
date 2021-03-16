@@ -18,6 +18,7 @@ const float STEPS = 400;
 Quellen
     https://developer.nvidia.com/gpugems/gpugems3/part-ii-light-and-shadows/chapter-13-volumetric-light-scattering-post-process
     https://entwickler.de/online/opengl-weltraumeffekte-mit-motion-blur-lens-flare-co-how-to-114796.html
+    https://fabiensanglard.net/lightScattering/
 */
 void main()
 {
