@@ -18,77 +18,57 @@ AstroidHelper::AstroidHelper(const char* model, Vector center, float intensity):
 }
 
 bool AstroidHelper::collision(Model* model) {
+	
+		Vector modelPos = model->transform().translation();
 
-	Vector b = model->transform().translation();
+		Vector bbMin = this->boundingBox().Min;
+		float rAstroidMin = bbMin.length();
 
-	Vector test = this->boundingBox().Min;
-	float rMetroidMin = sqrt(test.X*test.X + test.Y * test.Y + test.Z + test.Z );
-	test = this->boundingBox().Max;
-	float rMetroidMax = sqrt(test.X * test.X + test.Y * test.Y + test.Z + test.Z);
+		Vector bbMax = this->boundingBox().Max;
+		float rAstroidMax = bbMax.length();
 
-	float rAstroid;
+		float rAstroid;
 
-	if (rMetroidMax > rMetroidMin) {
-		rAstroid = rMetroidMax;
-	}
-	else {
-		rAstroid = rMetroidMin;
-	}
-
-	test = model->boundingBox().Min;
-	float rModelMin = sqrt(test.X * test.X + test.Y * test.Y + test.Z + test.Z);
-	test = model->boundingBox().Max;
-	float rModelMax = sqrt(test.X * test.X + test.Y * test.Y + test.Z + test.Z);
-
-	float rModel;
-
-	if (rModelMax > rModelMin) {
-		rModel = rModelMax;
-	}
-	else {
-		rModel = rModelMin;
-	}
-
-
-	for (Astroid& e : AstroidPool) {
-
-		//AABB test = boundingBox().transform(e.AstroidMat);
-		
-		//Größe der AABB berechnen.
-		/*Vector sizeBBa =  * e.scale;
-		Vector sizeBBb = model->boundingBox().size() * model->Transform.scaleR().length();
-
-
-
-		bool collisionX = e.AstroidMat.m03 + sizeBBa.X >= b.X && b.X + sizeBBb.X >= e.AstroidMat.m03;
-		bool collisionY = e.AstroidMat.m13 + sizeBBa.Y >= b.Y && b.Y + sizeBBb.Y >= e.AstroidMat.m13;
-		bool collisionZ = e.AstroidMat.m23 + sizeBBa.Z >= b.Z && b.Z + sizeBBb.Z >= e.AstroidMat.m23;
-
-
-
-		if (collisionX && collisionY && collisionZ) {
-			return true;
-		}*/
-
-		Vector t(e.AstroidMat.m03, e.AstroidMat.m13, e.AstroidMat.m23);
-
-		Vector tmp(b.X - t.X, b.Y - t.Y, b.Z - t.Z);
-
-		float r = sqrt(tmp.X * tmp.X + tmp.Y * tmp.Y + tmp.Z * tmp.Z);
-
-		if (r < rModel + rAstroid * e.scale) {
-			return true;
+		if (rAstroidMax > rAstroidMin) {
+			rAstroid = rAstroidMax;
 		}
-	}
+		else {
+			rAstroid = rAstroidMin;
+		}
 
-	return false;
+		bbMin = model->boundingBox().Min;
+		float rModelMin = bbMin.length();
+		bbMax = model->boundingBox().Max;
+		float rModelMax = bbMax.length();
+
+		float rModel;
+
+		if (rModelMax > rModelMin) {
+			rModel = rModelMax;
+		}
+		else {
+			rModel = rModelMin;
+		}
+
+		for (Astroid& e : AstroidPool) {
+
+			Vector AstroidPos(e.AstroidMat.m03, e.AstroidMat.m13, e.AstroidMat.m23);
+
+			Vector tmp(modelPos.X - AstroidPos.X, modelPos.Y - AstroidPos.Y, modelPos.Z - AstroidPos.Z);
+			float r = tmp.length();
+
+			if (r < rModel + rAstroid * e.scale) {
+				return true;
+			}
+		}
+		return false;
 }
 
 void AstroidHelper::createAstroids(Vector center, float intensity ) {
 	//int i = 0;
 	//int roundTrip = 2 * 3.14159265359 * i/ 180;
 	//float radius = 20;
-
+	
 		for (Astroid& a : AstroidPool) {
 				a.position = Vector((0.5f - Random::Float())*3000*intensity, (0.5f - Random::Float()) * 3000*intensity, (0.5f - Random::Float())  *3000*intensity);
 				a.rotation = 0;
@@ -146,7 +126,7 @@ void AstroidHelper::createAstroids(Vector center, float intensity ) {
 
 		 int index = 0;
 		 for (Astroid& p : AstroidPool) {
-				// std::cout << "draw() AstroidHelper" << std::endl;
+			 //std::cout << "draw() AstroidHelper" << std::endl;
 			 aShader->addModelMatrix(p.AstroidMat * transform(), index);
 			 index++;
 		 }
